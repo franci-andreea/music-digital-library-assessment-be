@@ -20,7 +20,7 @@ def get_artists():
 
 @app.route('/artists/<artist_id>', methods=["GET"])
 def get_artist(artist_id):
-    document = db_data.find_one({'_id':ObjectId(artist_id)})
+    document = db_data.find_one({'_id': ObjectId(artist_id)})
     document['_id'] = str(document['_id'])
 
     if document is None:
@@ -30,12 +30,25 @@ def get_artist(artist_id):
 
 @app.route('/artists/<artist_id>/albums', methods=["GET"])
 def get_artist_albums(artist_id):
-    document = db_data.find_one({'_id':ObjectId(artist_id)})
+    document = db_data.find_one({'_id': ObjectId(artist_id)})
     
     if document is None:
         return jsonify({'error': 'no document was found!'}), 404
     
     return jsonify({'data':{'artist_name': document["name"], 'albums': document["albums"]}}), 200
+
+@app.route('/artists/<artist_id>/albums/<album_name>', methods=["GET"])
+def get_artist_album(artist_id, album_name):
+    document = db_data.find_one({'_id': ObjectId(artist_id)})
+
+    if document is None:
+        return jsonify({'error':'no document was found!'}), 404
+    
+    for album in document["albums"]:
+        if album_name == album['title']:
+            return jsonify({'data':{'artist_name': document["name"], 'album': album}}), 200
+
+    return jsonify({'error':'this artist does not have an album named like that!'}), 404
 
 if __name__ == "__main__":
     app.run(debug=False)
