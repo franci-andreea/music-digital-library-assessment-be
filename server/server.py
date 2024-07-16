@@ -50,5 +50,15 @@ def get_artist_album(artist_id, album_name):
 
     return jsonify({'error':'this artist does not have an album named like that!'}), 404
 
+@app.route('/albums', methods=["GET"])
+def get_albums():
+    doc_list = db_data.find()
+    albums = []
+    for document in doc_list:
+        for album in document["albums"]:
+            albums.append({'artist_name':document["name"], 'album_name':album})
+
+    return jsonify({'data':albums}), 200
+
 if __name__ == "__main__":
     app.run(debug=False)
