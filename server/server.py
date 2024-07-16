@@ -1,8 +1,10 @@
 import database
 from flask import Flask, jsonify
 from bson.objectid import ObjectId
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 db = database.setup()
 db_data = db["data"]
@@ -55,7 +57,7 @@ def get_albums():
     albums = []
     for document in doc_list:
         for album in document["albums"]:
-            albums.append({'artist_name':document["name"], 'album_name':album})
+            albums.append({'artist_id':str(document['_id']),'artist_name':document["name"], 'album_name':album})
 
     return jsonify({'data':albums}), 200
 
