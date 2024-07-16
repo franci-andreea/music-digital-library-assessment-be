@@ -1,12 +1,11 @@
 import database
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
 db = database.setup()
 db_data = db["data"]
-
 
 @app.route('/artists', methods=["GET"])
 def get_artists():
