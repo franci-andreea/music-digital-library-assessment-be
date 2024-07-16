@@ -34,3 +34,5 @@ def setup():
             print(f"Collection with {DB_COL_NAME} already exists.")
     else:
         print(f"Database with {DB_NAME} already exists.")
+
+    return db
