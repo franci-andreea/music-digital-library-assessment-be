@@ -18,15 +18,24 @@ def get_artists():
 
     return jsonify({'data': json_list}), 200
 
-@app.route('/artists/<artist_id>')
+@app.route('/artists/<artist_id>', methods=["GET"])
 def get_artist(artist_id):
     document = db_data.find_one({'_id':ObjectId(artist_id)})
     document['_id'] = str(document['_id'])
 
     if document is None:
-        return jsonify({'error':'no document was found!'}), 404
+        return jsonify({'error': 'no document was found!'}), 404
 
     return jsonify({'data':document}), 200
+
+@app.route('/artists/<artist_id>/albums', methods=["GET"])
+def get_artist_albums(artist_id):
+    document = db_data.find_one({'_id':ObjectId(artist_id)})
+    
+    if document is None:
+        return jsonify({'error': 'no document was found!'}), 404
+    
+    return jsonify({'data':{'artist_name': document["name"], 'albums': document["albums"]}}), 200
 
 if __name__ == "__main__":
     app.run(debug=False)
