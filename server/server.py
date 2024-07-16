@@ -6,10 +6,6 @@ app = Flask(__name__)
 db = database.setup()
 db_data = db["data"]
 
-@app.route('/', methods=["GET"])
-def home():
-    return jsonify({'data':"hello, world!"}), 200
-
 @app.route('/artists', methods=["GET"])
 def get_artists():
     doc_list = db_data.find()
