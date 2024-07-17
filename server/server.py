@@ -61,5 +61,24 @@ def get_albums():
 
     return jsonify({'data':albums}), 200
 
+@app.route('/suggestions/', methods=["GET"])
+def no_suggestions():
+    return jsonify({'data':[]}), 200
+
+@app.route('/suggestions/<search_input>', methods=["GET"])
+def get_suggestions(search_input):
+    doc_list = db_data.find()
+    search_input = search_input.lower()
+    suggestions = []
+    for document in doc_list:
+        if search_input in document["name"].lower():
+            suggestions.append({'artist_id':str(document['_id']), 'artist_name':document["name"], 'album_name': ''})
+        for album in document["albums"]:
+            if search_input in album["title"].lower():
+                suggestions.append({'artist_id':str(document['_id']), 'artist_name':document["name"], 'album_name': album["title"]})
+    
+    return jsonify({'data':suggestions}), 200
+
+
 if __name__ == "__main__":
     app.run(debug=False)
